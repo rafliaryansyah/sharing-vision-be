@@ -62,8 +62,7 @@ You can now access the server at http://localhost8080
 
 
 ## API_Docs
-- [Postman Collection](https://google.com)
-- [Swagger (Open API)](https://google.com)
+- [Postman Collection](https://documenter.getpostman.com/view/8650602/2s93zFYfP8)
 
 
 ## API_Spec
@@ -91,17 +90,9 @@ Response :
 
 ```json 
 {
-    "code" : "number",
-    "status" : "string",
-    "data" : {
-         "id" : "string, unique",
-         "title" : "string",
-         "slug" : "string",
-         "content" : "string",
-         "category" : "string",
-         "createdDate" : "date",
-         "updatedDate" : "date"
-     }
+    "code": "int",
+    "message": "string",
+    "status": "string"
 }
 ```
 
@@ -171,7 +162,7 @@ Response :
 }
 ```
 
-## Update a article
+### Update a article
 
 Request :
 - Method : PUT
@@ -199,20 +190,11 @@ Response :
 {
     "code" : "number",
     "status" : "string",
-    "data" : {
-        "id" : "int, unique",
-        "title" : "string",
-        "slug" : "long",
-        "content" : "string",
-        "category" : "string",
-        "status" : "string",
-        "createdDate" : "date",
-        "updatedDate" : "date"
-    }
+    "message": "string"
 }
 ```
 
-## Delete a article
+### Delete a article
 
 Request :
 - Method : DELETE
@@ -226,6 +208,6 @@ Response :
 {
     "code" : "number",
     "status" : "string",
-    "message": "string",
+    "message": "string"
 }
 ```

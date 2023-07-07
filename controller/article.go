@@ -30,7 +30,7 @@ func CreateArticle(c *gin.Context) {
 		}
 		return
 	}
-	data, err := service.AddArticle(Article)
+	_, err := service.AddArticle(Article)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{
 			"error":   "Failed to retrieve articles",
@@ -39,9 +39,9 @@ func CreateArticle(c *gin.Context) {
 		return
 	}
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"code":   200,
-		"status": "OK",
-		"data":   data,
+		"code":    200,
+		"status":  "OK",
+		"message": "Berhasil membuat artikel baru.",
 	})
 }
 
@@ -88,7 +88,9 @@ func RetrieveArticles(c *gin.Context) {
 	totalPage := int(math.Ceil(float64(total) / float64(limit)))
 
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"data": data,
+		"status": "OK",
+		"code":   200,
+		"data":   data,
 		"meta": gin.H{
 			"page":      offset,
 			"perPage":   limit,
