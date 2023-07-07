@@ -168,6 +168,5 @@ func RemoveArticle(c *gin.Context) {
 		"code":    200,
 		"status":  "OK",
 		"message": "RemoveArticle",
-		"id":      c.Param("id"),
 	})
 }

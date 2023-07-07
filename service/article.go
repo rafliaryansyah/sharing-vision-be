@@ -111,18 +111,16 @@ func DeleteArticle(ID string) (int64, error) {
 	if err != nil {
 		return 0, fmt.Errorf(err.Error())
 	}
-	row, err := db.Prepare("DELETE FROM articles WHERE id = ?")
+	row, err := db.Exec("UPDATE articles SET status = 'Thrash' WHERE id = ?", ID)
 	if err != nil {
 		return 0, fmt.Errorf(err.Error())
 	}
-	defer db.Close()
-	result, err := row.Exec(ID)
 	if err != nil {
 		return 0, fmt.Errorf(err.Error())
 	}
 
 	// Get the number of affected rows
-	rowsAffected, err := result.RowsAffected()
+	rowsAffected, err := row.RowsAffected()
 	if err != nil {
 		return 0, fmt.Errorf(err.Error())
 	}
