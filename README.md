@@ -4,8 +4,8 @@ Test Koding untuk Fullstack Developer Sharing Vision Golang
 
 ## Table of contents
 1. [Installation](#Installation)
-2. [API Docs](#API Docs)
-3. [API Spec](#Api Spec)
+2. [API Docs](#API_Docs)
+3. [API Spec](#API_Spec)
 
 
 ## Installation
@@ -61,12 +61,12 @@ go run .
 You can now access the server at http://localhost8080
 
 
-## API Docs
+## API_Docs
 - [Postman Collection](https://google.com)
 - [Swagger (Open API)](https://google.com)
 
 
-## Api Spec
+## API_Spec
 
 ### Create a article
 
@@ -83,7 +83,7 @@ Request :
     "title" : "string, unique",
     "content" : "string",
     "category" : "string",
-    "status" : "enum: Publish|Draft|Thrash"
+    "status" : "string, enum: Publish|Draft|Thrash"
 }
 ```
 
@@ -105,14 +105,14 @@ Response :
 }
 ```
 
-## Retrieve a list of articles
+### Retrieve a list of articles
 
 Request :
 - Method : GET
 - Endpoint : `/article?limit=10&offset=1`
-- Query
-  - limit: int
-  - offset: int
+- Query Param :
+  - **limit** : number,
+  - **offset** : number
 - Header :
     - Accept: application/json
 
@@ -124,7 +124,7 @@ Response :
     "status": "int",
     "data" : [
       {
-        "id" : "string, unique",
+        "id" : "int, unique",
         "title" : "string",
         "slug" : "long",
         "content" : "string",
@@ -143,21 +143,53 @@ Response :
 }
 ```
 
-## Update Product
+### Retrieve a single of article
 
 Request :
 - Method : PUT
-- Endpoint : `/api/products/{id_product}`
+- Endpoint : `/article/{articleId}`
 - Header :
     - Content-Type: application/json
     - Accept: application/json
-- Body :
+
+Response :
 
 ```json 
 {
-    "name" : "string",
-    "price" : "long",
-    "quantity" : "integer"
+    "code" : "number",
+    "status" : "string",
+    "data" : {
+        "id" : "int, unique",
+        "title" : "string",
+        "slug" : "long",
+        "content" : "string",
+        "category" : "string",
+        "status" : "string",
+        "createdDate" : "date",
+        "updatedDate" : "date"
+     }
+}
+```
+
+## Update a article
+
+Request :
+- Method : PUT
+- Endpoint : `/article/{articleID}`
+- Header :
+    - Accept: application/json
+- Query Param :
+    - size : number,
+    - page : number
+
+Request Body :
+
+```json
+{
+  "title": "string",
+  "content": "string",
+  "category": "string",
+  "status": "string, enum:Publish,Draft,Thrash"
 }
 ```
 
@@ -168,26 +200,25 @@ Response :
     "code" : "number",
     "status" : "string",
     "data" : {
-         "id" : "string, unique",
-         "name" : "string",
-         "price" : "long",
-         "quantity" : "integer",
-         "createdAt" : "date",
-         "updatedAt" : "date"
-     }
+        "id" : "int, unique",
+        "title" : "string",
+        "slug" : "long",
+        "content" : "string",
+        "category" : "string",
+        "status" : "string",
+        "createdDate" : "date",
+        "updatedDate" : "date"
+    }
 }
 ```
 
-## List Product
+## Delete a article
 
 Request :
-- Method : GET
-- Endpoint : `/api/products`
+- Method : DELETE
+- Endpoint : `/article/{articleID}`
 - Header :
     - Accept: application/json
-- Query Param :
-    - size : number,
-    - page : number
 
 Response :
 
@@ -195,40 +226,6 @@ Response :
 {
     "code" : "number",
     "status" : "string",
-    "data" : [
-        {
-             "id" : "string, unique",
-             "name" : "string",
-             "price" : "long",
-             "quantity" : "integer",
-             "createdAt" : "date",
-             "updatedAt" : "date"
-        },
-        {
-             "id" : "string, unique",
-             "name" : "string",
-             "price" : "long",
-             "quantity" : "integer",
-             "createdAt" : "date",
-             "updatedAt" : "date"
-         }
-    ]
-}
-```
-
-## Delete Product
-
-Request :
-- Method : DELETE
-- Endpoint : `/api/products/{id_product}`
-- Header :
-    - Accept: application/json
-
-Response :
-
-```json 
-{
-    "code" : "number",
-    "status" : "string"
+    "message": "string",
 }
 ```
