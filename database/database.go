@@ -49,7 +49,7 @@ func InitDatabase() {
 	fmt.Println(pingError)
 	fmt.Println("Connect!")
 
-	// migrate -database "mysql://root@tcp(localhost:3306)/sharing_vision" -path database/migrations up
+	// migrate -database "mysql://USERNAME:PASSWORD@tcp(localhost:3306)/NAMA_DATABASE" -path database/migrations up
 }
 
 func init() {
