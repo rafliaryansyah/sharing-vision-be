@@ -48,6 +48,7 @@ func CreateArticle(c *gin.Context) {
 func RetrieveArticles(c *gin.Context) {
 	limitStr := c.DefaultQuery("limit", "10")
 	offsetStr := c.DefaultQuery("offset", "1")
+	status := c.Query("status")
 
 	limit, err := strconv.Atoi(limitStr)
 	if err != nil {
@@ -66,8 +67,7 @@ func RetrieveArticles(c *gin.Context) {
 		})
 		return
 	}
-
-	data, err := service.GetArticles(limit, offset)
+	data, err := service.GetArticles(limit, offset, status)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{
 			"error":   "Failed to retrieve articles",
@@ -76,7 +76,7 @@ func RetrieveArticles(c *gin.Context) {
 		return
 	}
 
-	total, err := service.GetTotalArticles()
+	total, err := service.GetTotalArticles(status)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{
 			"error":   "Failed to retrieve articles",

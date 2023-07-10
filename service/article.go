@@ -33,34 +33,80 @@ func AddArticle(article models.Article) (int64, error) {
 	return id, nil
 }
 
-func GetArticles(limit, offset int) ([]models.Article, error) {
+//func GetArticles(limit, offset int, status string) ([]models.Article, error) {
+//	offset = (offset - 1) * limit
+//	var Articles []models.Article
+//	//if status == "" {
+//	//} else {
+//	//	string := []string{status}
+//	//}
+//	log.Println("Status.GETARTICLES => ", status)
+//	db := database.DB // HOW TO GET CONNECTION/CALL DB FROM DATABASE/DATABASE.go ????
+//	//query := fmt.Sprintf("SELECT * FROM articles LIMIT %s OFFSET %s", limit, offset)
+//	rows, err := db.Query("SELECT * FROM articles LIMIT (?) OFFSET (?) WHERE status  (?)", limit, offset, status)
+//	if err != nil {
+//		return nil, fmt.Errorf("Failed to load articles: %v", err)
+//	}
+//	defer rows.Close()
+//	for rows.Next() {
+//		var Article models.Article
+//		if err := rows.Scan(&Article.ID, &Article.Title, &Article.Slug, &Article.Content, &Article.Category, &Article.CreatedDate, &Article.UpdatedDate, &Article.Status); err != nil {
+//			return nil, fmt.Errorf("failed scan article: %v", err)
+//		}
+//		Articles = append(Articles, Article)
+//	}
+//	if err := rows.Err(); err != nil {
+//		return nil, fmt.Errorf("Gagal ketika load article: %v", err)
+//	}
+//	return Articles, nil
+//}
+
+func GetArticles(limit, offset int, status string) ([]models.Article, error) {
 	offset = (offset - 1) * limit
 	var Articles []models.Article
-	db := database.DB // HOW TO GET CONNECTION/CALL DB FROM DATABASE/DATABASE.go ????
-	//query := fmt.Sprintf("SELECT * FROM articles LIMIT %s OFFSET %s", limit, offset)
-	rows, err := db.Query("SELECT * FROM articles LIMIT ? OFFSET ?", limit, offset)
+
+	db := database.DB // Menggunakan koneksi DB dari package database
+
+	query := "SELECT * FROM articles"
+	if status == "" {
+		query += fmt.Sprintf(" WHERE status IN (%v, %v, %v)", "'Publish'", "'Draft'", "'Thrash'")
+	} else {
+		query += fmt.Sprintf(" WHERE status IN ('%v')", status)
+	}
+	query += " LIMIT ? OFFSET ?"
+	log.Println(query)
+	rows, err := db.Query(query, limit, offset)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to load articles: %v", err)
 	}
 	defer rows.Close()
+
 	for rows.Next() {
 		var Article models.Article
 		if err := rows.Scan(&Article.ID, &Article.Title, &Article.Slug, &Article.Content, &Article.Category, &Article.CreatedDate, &Article.UpdatedDate, &Article.Status); err != nil {
-			return nil, fmt.Errorf("failed scan article: %v", err)
+			return nil, fmt.Errorf("Failed to scan article: %v", err)
 		}
 		Articles = append(Articles, Article)
 	}
+
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("Gagal ketika load article: %v", err)
+		return nil, fmt.Errorf("Failed when loading articles: %v", err)
 	}
+
 	return Articles, nil
 }
 
-func GetTotalArticles() (int, error) {
+func GetTotalArticles(status string) (int, error) {
 	db := database.DB
 
+	query := "SELECT COUNT(*) FROM articles"
+	if status == "" {
+		query += fmt.Sprintf(" WHERE status IN (%v, %v, %v)", "'Publish'", "'Draft'", "'Thrash'")
+	} else {
+		query += fmt.Sprintf(" WHERE status IN ('%v')", status)
+	}
 	var total int
-	err := db.QueryRow("SELECT COUNT(*) FROM articles").Scan(&total)
+	err := db.QueryRow(query).Scan(&total)
 	if err != nil {
 		return 0, fmt.Errorf("failed to get total count of articles: %v", err)
 	}
